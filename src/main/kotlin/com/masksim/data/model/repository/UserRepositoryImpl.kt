@@ -11,9 +11,9 @@ import org.jetbrains.exposed.sql.select
 
 class UserRepositoryImpl : UserRepository {
 
-    override suspend fun getUserByLogin(login: String): UserModel? {
+    override suspend fun getUserByUsername(username: String): UserModel? {
         return dbQuery {
-            UserTable.select { UserTable.login.eq(login) }
+            UserTable.select { UserTable.username.eq(username) }
                 .map { rowToModel(it) }
                 .singleOrNull()
         }
@@ -22,7 +22,7 @@ class UserRepositoryImpl : UserRepository {
     override suspend fun insertUser(userModel: UserModel) {
         return dbQuery {
             UserTable.insert { table ->
-                table[login] = userModel.login
+                table[username] = userModel.username
                 table[password] = userModel.password
                 table[firstName] = userModel.firstName
                 table[lastName] = userModel.lastName
@@ -37,7 +37,7 @@ class UserRepositoryImpl : UserRepository {
         if (row == null) return null
         return UserModel(
             row[UserTable.id],
-            row[UserTable.login],
+            row[UserTable.username],
             row[UserTable.password],
             row[UserTable.firstName],
             row[UserTable.lastName],

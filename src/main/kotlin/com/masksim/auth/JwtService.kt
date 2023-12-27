@@ -22,7 +22,7 @@ class JwtService {
         return JWT.create()
             .withSubject("CardAppAuth")
             .withIssuer(issuer)
-            .withClaim("login", user.login)
+            .withClaim("username", user.username)
             .withExpiresAt(LocalDateTime.now().plusDays(10).toInstant(ZoneOffset.UTC))
             .sign(algorithm)
     }

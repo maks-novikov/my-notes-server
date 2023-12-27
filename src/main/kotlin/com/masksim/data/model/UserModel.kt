@@ -5,7 +5,7 @@ import io.ktor.server.auth.*
 @kotlinx.serialization.Serializable
 data class UserModel(
     val id: Int = 0,
-    val login: String,
+    val username: String,
     val password: String,
     val firstName: String,
     val lastName: String,

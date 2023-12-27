@@ -14,8 +14,8 @@ fun Application.configureSecurity(userUseCase: UserUseCase, jwtService: JwtServi
             realm = "Service server"
             validate {
                 val payload = it.payload
-                val login = payload.getClaim("login").asString()
-                val user = userUseCase.findUserByLogin(login)
+                val username = payload.getClaim("username").asString()
+                val user = userUseCase.findUserByUsername(username)
                 user
             }
         }

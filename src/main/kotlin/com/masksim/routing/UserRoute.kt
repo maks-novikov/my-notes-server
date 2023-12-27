@@ -24,7 +24,7 @@ fun Route.userRoute(userUseCase: UserUseCase) {
         try {
             val request = call.receive<RegisterRequest>()
             val user = UserModel(
-                login = request.login.trim().lowercase(),
+                username = request.username.trim().lowercase(),
                 password = hash(request.password),
                 firstName = request.firstName,
                 lastName = request.lastName,
@@ -32,7 +32,7 @@ fun Route.userRoute(userUseCase: UserUseCase) {
                 role = RoleModel.valueOf(request.role)
             )
             userUseCase.createUser(user)
-            call.respond(HttpStatusCode.Created, RegisterResponse(user.login, userUseCase.generateToken(user)))
+            call.respond(HttpStatusCode.Created, RegisterResponse(user.username, userUseCase.generateToken(user)))
         } catch (e: BadRequestException) {
             println(e.message)
             badRequestResponse(call)
@@ -49,7 +49,7 @@ fun Route.userRoute(userUseCase: UserUseCase) {
     post("api/v1/login") {
         try {
             val request = call.receive<LoginRequest>()
-            val user = userUseCase.findUserByLogin(request.login.trim().lowercase())
+            val user = userUseCase.findUserByUsername(request.username.trim().lowercase())
             if (user != null) {
                 val requestPasswordHash = hash(request.password)
                 if (requestPasswordHash == user.password) {

@@ -10,8 +10,8 @@ class UserUseCase(private val repository: UserRepository, private val jwtService
         repository.insertUser(userModel)
     }
 
-    suspend fun findUserByLogin(login: String): UserModel? {
-        return repository.getUserByLogin(login)
+    suspend fun findUserByUsername(username: String): UserModel? {
+        return repository.getUserByUsername(username)
     }
 
     fun generateToken(userModel: UserModel): String {
