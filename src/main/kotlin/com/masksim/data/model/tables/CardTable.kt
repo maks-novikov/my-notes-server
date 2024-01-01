@@ -9,7 +9,6 @@ object CardTable : Table() {
     val owner: Column<Int> = integer("ownerId").references(UserTable.id)
     val title: Column<String> = varchar("title", 50)
     val description: Column<String> = varchar("description", 1000)
-    val verified: Column<Boolean> = bool("verified")
     val createdAt: Column<String> = varchar("createdAt", 50)
 
     override val primaryKey: PrimaryKey = PrimaryKey(id)

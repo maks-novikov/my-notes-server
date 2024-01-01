@@ -15,7 +15,6 @@ class CardRepositoryImpl : CardRepository {
                 it[owner] = card.owner
                 it[title] = card.title
                 it[description] = card.description
-                it[verified] = card.verified
                 it[createdAt] = card.createdAt
             }
         }
@@ -29,11 +28,17 @@ class CardRepositoryImpl : CardRepository {
                 it[owner] = card.owner
                 it[title] = card.title
                 it[description] = card.description
-                it[verified] = card.verified
             })
         }
     }
 
+    override suspend fun getCard(cardId: Int, ownerId: Int): CardModel? {
+        return dbQuery {
+            CardTable.select(where = {
+                CardTable.id.eq(cardId) and CardTable.owner.eq(ownerId)
+            }).firstNotNullOfOrNull { rowToCard(it) }
+        }
+    }
     override suspend fun getAllCards(): List<CardModel> {
         return dbQuery {
             CardTable.selectAll().mapNotNull { rowToCard(it) }
@@ -52,7 +57,6 @@ class CardRepositoryImpl : CardRepository {
             owner = row[CardTable.owner],
             title = row[CardTable.title],
             description = row[CardTable.description],
-            verified = row[CardTable.verified],
             createdAt = row[CardTable.createdAt]
         )
     }

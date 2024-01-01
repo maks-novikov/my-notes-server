@@ -4,6 +4,8 @@ import com.masksim.data.model.CardModel
 import com.masksim.data.model.UserModel
 import com.masksim.data.model.requests.CreateCardRequest
 import com.masksim.data.model.requests.UpdateCardRequest
+import com.masksim.data.model.response.BaseErrorResponse
+import com.masksim.data.model.response.ResponseErrorCode
 import com.masksim.domain.usecase.CardUseCase
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -16,6 +18,25 @@ import io.ktor.server.routing.*
 fun Route.cardRoute(cardUseCase: CardUseCase) {
 
     authenticate("jwt") {
+
+        get("api/v1/card/{id}") {
+            try {
+                val cardId = call.parameters["id"] ?: throw BadRequestException("No cardId provided")
+                val ownerId = call.principal<UserModel>()?.id
+                val cardModel = cardUseCase.getCard(cardId.toInt(), ownerId!!)
+                if (cardModel != null)
+                    call.respond(cardModel)
+                else throw NotFoundException("Card with id: $cardId for user: $ownerId, are not found")
+            } catch (e: NotFoundException) {
+                call.respond(
+                    HttpStatusCode.NotFound,
+                    BaseErrorResponse(e.message ?: "", ResponseErrorCode.CARD_NOT_FOUND)
+                )
+            } catch (e: Throwable) {
+                unknownErrorResponse(call)
+            }
+        }
+
         get("api/v1/card") {
             try {
                 val cards = cardUseCase.getAllCards()
@@ -35,7 +56,6 @@ fun Route.cardRoute(cardUseCase: CardUseCase) {
                     owner = ownerId!!,
                     title = request.title,
                     description = request.description,
-                    verified = request.verified,
                     createdAt = request.createdAt
                 )
                 cardUseCase.addCard(card)
@@ -47,7 +67,7 @@ fun Route.cardRoute(cardUseCase: CardUseCase) {
             }
         }
 
-        patch ("api/v1/card") {
+        patch("api/v1/card") {
             try {
                 val request = call.receive<UpdateCardRequest>()
                 val ownerId = call.principal<UserModel>()?.id
@@ -56,7 +76,6 @@ fun Route.cardRoute(cardUseCase: CardUseCase) {
                     owner = ownerId!!,
                     title = request.title,
                     description = request.description,
-                    verified = request.verified,
                     createdAt = request.createdAt
                 )
                 cardUseCase.updateCard(card)
@@ -68,7 +87,7 @@ fun Route.cardRoute(cardUseCase: CardUseCase) {
             }
         }
 
-        delete("api/v1/card/delete/{id}") {
+        delete("api/v1/card/{id}") {
             try {
                 val cardId = call.parameters["id"] ?: throw BadRequestException("No cardId provided")
                 val ownerId = call.principal<UserModel>()?.id

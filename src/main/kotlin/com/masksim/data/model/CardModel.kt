@@ -6,6 +6,5 @@ class CardModel(
     val owner: Int,
     val title: String,
     val description: String,
-    val createdAt: String,
-    val verified: Boolean = false
+    val createdAt: String
 )

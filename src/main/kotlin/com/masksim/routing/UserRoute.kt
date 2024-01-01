@@ -53,7 +53,7 @@ fun Route.userRoute(userUseCase: UserUseCase) {
             if (user != null) {
                 val requestPasswordHash = hash(request.password)
                 if (requestPasswordHash == user.password) {
-                    call.respond(HttpStatusCode.OK, LoginResponse(userUseCase.generateToken(user)))
+                    call.respond(HttpStatusCode.OK, LoginResponse(user.username ,userUseCase.generateToken(user)))
                 } else {
                     call.respond(
                         HttpStatusCode.Unauthorized,

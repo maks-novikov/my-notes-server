@@ -13,6 +13,10 @@ class CardUseCase(private val cardRepository: CardRepository) {
         cardRepository.updateCard(cardModel)
     }
 
+    suspend fun getCard(cardId: Int, ownerId: Int): CardModel? {
+        return cardRepository.getCard(cardId, ownerId)
+    }
+
     suspend fun getAllCards(): List<CardModel> {
         return cardRepository.getAllCards()
     }
