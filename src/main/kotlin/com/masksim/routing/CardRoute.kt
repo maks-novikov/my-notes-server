@@ -59,7 +59,8 @@ fun Route.cardRoute(cardUseCase: CardUseCase) {
                     createdAt = request.createdAt
                 )
                 cardUseCase.addCard(card)
-                call.respond(HttpStatusCode.Created)
+                //call.respond(HttpStatusCode.Created)
+                call.respond(HttpStatusCode.Created, card)
             } catch (e: BadRequestException) {
                 badRequestResponse(call)
             } catch (e: Exception) {
