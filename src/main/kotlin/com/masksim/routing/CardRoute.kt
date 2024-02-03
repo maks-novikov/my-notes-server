@@ -58,9 +58,8 @@ fun Route.cardRoute(cardUseCase: CardUseCase) {
                     description = request.description,
                     createdAt = request.createdAt
                 )
-                cardUseCase.addCard(card)
-                //call.respond(HttpStatusCode.Created)
-                call.respond(HttpStatusCode.Created, card)
+                val createdCard = cardUseCase.addCard(card)
+                call.respond(HttpStatusCode.Created, createdCard)
             } catch (e: BadRequestException) {
                 badRequestResponse(call)
             } catch (e: Exception) {

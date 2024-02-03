@@ -5,8 +5,8 @@ import com.masksim.domain.repository.CardRepository
 
 class CardUseCase(private val cardRepository: CardRepository) {
 
-    suspend fun addCard(cardModel: CardModel) {
-        cardRepository.addCard(cardModel)
+    suspend fun addCard(cardModel: CardModel): CardModel {
+        return cardRepository.addCard(cardModel)
     }
 
     suspend fun updateCard(cardModel: CardModel) {

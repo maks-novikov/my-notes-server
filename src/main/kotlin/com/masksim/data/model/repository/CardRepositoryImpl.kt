@@ -1,6 +1,7 @@
 package com.masksim.data.model.repository
 
 import com.masksim.data.model.CardModel
+import com.masksim.data.model.requests.UpdateCardRequest
 import com.masksim.data.model.tables.CardTable
 import com.masksim.domain.repository.CardRepository
 import com.masksim.plugins.DatabaseFactory.dbQuery
@@ -9,14 +10,15 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
 class CardRepositoryImpl : CardRepository {
 
-    override suspend fun addCard(card: CardModel) {
-        dbQuery {
-            CardTable.insert {
-                it[owner] = card.owner
-                it[title] = card.title
-                it[description] = card.description
-                it[createdAt] = card.createdAt
-            }
+    override suspend fun addCard(card: CardModel): CardModel  {
+       return dbQuery {
+           val row = CardTable.insert {
+               it[owner] = card.owner
+               it[title] = card.title
+               it[description] = card.description
+               it[createdAt] = card.createdAt
+           }.resultedValues!!.first()
+           rowToCard(row)
         }
     }
 
