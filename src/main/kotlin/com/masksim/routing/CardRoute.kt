@@ -76,7 +76,7 @@ fun Route.cardRoute(cardUseCase: CardUseCase) {
                     owner = ownerId!!,
                     title = request.title,
                     description = request.description,
-                    createdAt = request.createdAt
+                    createdAt = request.createdAt ?: ""
                 )
                 cardUseCase.updateCard(card)
                 call.respond(HttpStatusCode.OK)
