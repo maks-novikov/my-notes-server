@@ -39,7 +39,8 @@ fun Route.cardRoute(cardUseCase: CardUseCase) {
 
         get("api/v1/card") {
             try {
-                val cards = cardUseCase.getAllCards()
+                val ownerId = call.principal<UserModel>()?.id
+                val cards = cardUseCase.getAllCards(ownerId!!)
                 call.respond(cards)
             } catch (e: Exception) {
                 unknownErrorResponse(call)

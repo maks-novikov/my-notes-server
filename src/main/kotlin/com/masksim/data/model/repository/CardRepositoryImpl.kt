@@ -41,9 +41,11 @@ class CardRepositoryImpl : CardRepository {
             }).firstNotNullOfOrNull { rowToCard(it) }
         }
     }
-    override suspend fun getAllCards(): List<CardModel> {
+    override suspend fun getAllCards(ownerId: Int): List<CardModel> {
         return dbQuery {
-            CardTable.selectAll().mapNotNull { rowToCard(it) }
+            CardTable.select(where = {
+                CardTable.owner.eq(ownerId)
+            }).mapNotNull { rowToCard(it) }
         }
     }
 

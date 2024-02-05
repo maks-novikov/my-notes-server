@@ -17,8 +17,8 @@ class CardUseCase(private val cardRepository: CardRepository) {
         return cardRepository.getCard(cardId, ownerId)
     }
 
-    suspend fun getAllCards(): List<CardModel> {
-        return cardRepository.getAllCards()
+    suspend fun getAllCards(ownerId: Int): List<CardModel> {
+        return cardRepository.getAllCards(ownerId)
     }
 
     suspend fun deleteCard(cardId: Int, ownerId: Int) {
